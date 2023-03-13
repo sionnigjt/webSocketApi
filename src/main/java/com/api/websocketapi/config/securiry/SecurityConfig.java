@@ -1,4 +1,4 @@
-package com.api.websocketapi.config;
+package com.api.websocketapi.config.securiry;
 
 import com.api.websocketapi.config.component.CustomAuthenticationFailureHandler;
 import com.api.websocketapi.config.component.CustomAuthenticationSuccessHandler;
@@ -38,8 +38,8 @@ public class SecurityConfig {
             try {
                 authorize
                         // 放行登录接口
-                        .requestMatchers("/api/login").permitAll()
-                        .requestMatchers("/api/register").permitAll()
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/register").permitAll()
                         // 放行资源目录
                         .requestMatchers("/static/**", "/resources/**").permitAll()
                         // 其余的都需要权限校验
