@@ -40,6 +40,7 @@ public class SecurityConfig {
                         // 放行登录接口
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/register").permitAll()
+                        .requestMatchers("/websocket").permitAll()
                         // 放行资源目录
                         .requestMatchers("/static/**", "/resources/**").permitAll()
                         // 其余的都需要权限校验
@@ -55,7 +56,7 @@ public class SecurityConfig {
                 login -> login.successHandler(successHandler)
                         //自定义用户表单
 //                        .loginPage("/login.html")
-                        .defaultSuccessUrl("/", false)
+//                        .defaultSuccessUrl("/", false)
                         .failureUrl("/error.html")
                         .failureHandler(failureHandler)
                 )

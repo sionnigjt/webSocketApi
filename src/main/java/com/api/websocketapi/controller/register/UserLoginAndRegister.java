@@ -1,4 +1,4 @@
-package com.api.websocketapi.controller;
+package com.api.websocketapi.controller.register;
 
 import com.api.websocketapi.entity.Userschema;
 import com.api.websocketapi.service.UserschemaService;
@@ -20,7 +20,6 @@ public class UserLoginAndRegister {
 
     /**
      *注册功能
-     * @return
      */
     @RequestMapping("/register")
     public ResponseEntity<Userschema> register(Userschema userschema) {
