@@ -4,9 +4,6 @@ import com.api.websocketapi.entity.Userschema;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 /**

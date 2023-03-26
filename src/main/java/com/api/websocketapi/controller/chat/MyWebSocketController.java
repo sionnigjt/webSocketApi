@@ -12,6 +12,7 @@ import java.io.IOException;
  * @author sion
  */
 @Component
+@RequestMapping("/api/websocket")
 public class MyWebSocketController {
 
     @Resource

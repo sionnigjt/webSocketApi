@@ -3,6 +3,7 @@ package com.api.websocketapi.service;
 import com.api.websocketapi.entity.Userschema;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 /**
@@ -54,5 +55,14 @@ public interface UserschemaService  {
      * @return 是否成功
      */
     boolean deleteById(Integer id);
+    /**
+     * 通过主键删除数据
+     *
+     * @param  name 姓名
+     * @param  password 密码
+     * @return 是否成功
+     */
+    ResponseEntity<String> login(String name, String password);
+
 
 }

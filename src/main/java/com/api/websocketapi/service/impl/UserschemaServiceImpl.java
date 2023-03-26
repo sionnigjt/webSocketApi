@@ -4,6 +4,8 @@ import com.api.websocketapi.entity.Userschema;
 import com.api.websocketapi.dao.UserschemaDao;
 import com.api.websocketapi.service.UserschemaService;
 import jakarta.annotation.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
@@ -81,5 +83,20 @@ public class UserschemaServiceImpl implements UserschemaService {
     @Override
     public boolean deleteById(Integer id) {
         return this.userschemaDao.deleteById(id) > 0;
+    }
+
+    @Override
+    public ResponseEntity<String>  login(String name,String password) {
+            Userschema userschema=userschemaDao.selectByUsername(name);
+            String encodedPassword=userschema.getPassword();
+            if (new BCryptPasswordEncoder().matches(password,encodedPassword)){
+                return ResponseEntity.ok(userschema.getId()+"") ;
+            }
+            else {
+
+                return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("用户名或密码错误");
+            }
+
+
     }
 }
