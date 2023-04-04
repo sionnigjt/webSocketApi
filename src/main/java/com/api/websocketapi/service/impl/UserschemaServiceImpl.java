@@ -88,14 +88,17 @@ public class UserschemaServiceImpl implements UserschemaService {
     @Override
     public ResponseEntity<String>  login(String name,String password) {
             Userschema userschema=userschemaDao.selectByUsername(name);
-            String encodedPassword=userschema.getPassword();
-            if (new BCryptPasswordEncoder().matches(password,encodedPassword)){
-                return ResponseEntity.ok(userschema.getId()+"") ;
-            }
-            else {
-
+            if (userschema==null){
                 return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("用户名或密码错误");
             }
+           else{
+                String encodedPassword=userschema.getPassword();
+                if (new BCryptPasswordEncoder().matches(password,encodedPassword)){
+                    return ResponseEntity.ok(userschema.getId()+"") ;
+                }
+
+            }
+        return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("用户名或密码错误");
 
 
     }
