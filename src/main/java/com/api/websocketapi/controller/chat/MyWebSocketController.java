@@ -1,8 +1,7 @@
 package com.api.websocketapi.controller.chat;
 
-import com.api.websocketapi.config.component.MyWebSocketHandler;
+import com.api.websocketapi.controller.chat.handler.WebSocketHandlerText;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -16,7 +15,7 @@ import java.io.IOException;
 public class MyWebSocketController {
 
     @Resource
-    private MyWebSocketHandler webSocketHandler;
+    private WebSocketHandlerText webSocketHandler;
 
     @RequestMapping("/send")
     public void sendMessage() throws IOException {
