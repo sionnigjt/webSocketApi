@@ -25,6 +25,17 @@ public class UserschemaServiceImpl implements UserschemaService {
     private UserschemaDao userschemaDao;
 
     /**
+     * 通过username查询单条数据
+     *
+     * @param  id
+     * @return String 姓名
+     */
+    @Override
+    public String getNameById(Integer id) {
+        return userschemaDao.getNameById(id);
+    }
+
+    /**
      * 通过ID查询单条数据
      *
      * @param id 主键
@@ -88,14 +99,17 @@ public class UserschemaServiceImpl implements UserschemaService {
     @Override
     public ResponseEntity<String>  login(String name,String password) {
             Userschema userschema=userschemaDao.selectByUsername(name);
-            String encodedPassword=userschema.getPassword();
-            if (new BCryptPasswordEncoder().matches(password,encodedPassword)){
-                return ResponseEntity.ok(userschema.getId()+"") ;
-            }
-            else {
-
+            if (userschema==null){
                 return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("用户名或密码错误");
             }
+           else{
+                String encodedPassword=userschema.getPassword();
+                if (new BCryptPasswordEncoder().matches(password,encodedPassword)){
+                    return ResponseEntity.ok(userschema.getId()+"") ;
+                }
+
+            }
+        return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("用户名或密码错误");
 
 
     }

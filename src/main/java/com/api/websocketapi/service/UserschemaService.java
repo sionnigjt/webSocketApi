@@ -14,7 +14,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface UserschemaService  {
-
+    /**
+     * 通过username查询单条数据
+     *
+     * @param  id
+     * @return String 姓名
+     */
+    String getNameById(Integer id);
     /**
      * 通过ID查询单条数据
      *

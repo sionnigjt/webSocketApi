@@ -15,6 +15,9 @@
         <result property="signature" column="signature" jdbcType="VARCHAR"/>
         <result property="imgUrl" column="img_url" jdbcType="VARCHAR"/>
     </resultMap>
+    <resultMap id="name" type="java.lang.String">
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+    </resultMap>
     <!--查询单个-->
     <select id="selectByUsername" resultMap="BaseResultMap">
         select id,
@@ -29,6 +32,12 @@
                img_url
         from userSchema
         where name = #{username}
+    </select>
+    <!--查询单个-->
+    <select id="getNameById" resultMap="name">
+        select   name
+        from userSchema
+        where id = #{id}
     </select>
     <!--查询单个-->
     <select id="queryById" resultMap="BaseResultMap">

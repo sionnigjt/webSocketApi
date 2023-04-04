@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  * @since 2023-03-05 12:47:53
  */
 @RestController
-@RequestMapping("/api/login/userschema")
+@RequestMapping("/api/user")
 public class UserschemaController {
     /**
      * 服务对象
@@ -24,27 +24,17 @@ public class UserschemaController {
     @Resource
     private UserschemaService userschemaService;
 
-    /**
-     * 分页查询
-     *
-     * @param userschema  筛选条件
-     * @param pageRequest 分页对象
-     * @return 查询结果
-     */
-    @GetMapping
-    public ResponseEntity<Page<Userschema>> queryByPage(Userschema userschema, PageRequest pageRequest) {
-        return ResponseEntity.ok(this.userschemaService.queryByPage(userschema, pageRequest));
-    }
+
 
     /**
-     * 通过主键查询单条数据
+     * 通过username查询单条数据
      *
-     * @param id 主键
-     * @return 单条数据
+     * @param  id
+     * @return String 姓名
      */
-    @GetMapping("{id}")
-    public ResponseEntity<Userschema> queryById(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(this.userschemaService.queryById(id));
+    @GetMapping("/getNameById/{id}")
+    public ResponseEntity<String> getNameById(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(this.userschemaService.getNameById(id));
     }
 
     /**

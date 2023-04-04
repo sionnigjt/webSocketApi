@@ -15,6 +15,13 @@ import java.util.List;
 @Mapper
 public interface UserschemaDao {
     /**
+     * 通过username查询单条数据
+     *
+     * @param  id
+     * @return String 姓名
+     */
+    String getNameById(Integer id);
+    /**
     * 通过username查询单条数据
     *
     * @param username 姓名
