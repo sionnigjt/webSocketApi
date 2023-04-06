@@ -27,8 +27,8 @@
         from friendSchema join userSchema uS on uS.id = friendSchema.friendId
         where userId =#{id} union
         select friendSchema.id,
-               friendSchema.userId,
                friendSchema.friendId,
+               friendSchema.userId,
                uS.name,
                uS.img_url
         from friendSchema join userSchema uS on uS.id = friendSchema.userId

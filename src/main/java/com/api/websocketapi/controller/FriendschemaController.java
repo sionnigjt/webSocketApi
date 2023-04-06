@@ -18,6 +18,7 @@ import java.util.List;
  * @since 2023-04-04 23:53:42
  */
 @RestController
+@CrossOrigin
 @RequestMapping("/api/friend")
 public class FriendschemaController {
     /**

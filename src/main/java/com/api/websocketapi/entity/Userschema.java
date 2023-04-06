@@ -24,7 +24,7 @@ public class Userschema implements Serializable {
 
     private Date birthday;
 
-    private Long phone;
+    private String phone;
 
     private String password;
 
@@ -75,11 +75,11 @@ public class Userschema implements Serializable {
         this.birthday = birthday;
     }
 
-    public Long getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(long phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
