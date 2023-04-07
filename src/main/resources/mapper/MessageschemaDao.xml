@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.api.websocketapi.dao.MessageschemaDao">
+
+    <resultMap id="BaseResultMap" type="com.api.websocketapi.entity.Messageschema">
+        <!--@Table messageSchema-->
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="sendid" column="sendId" jdbcType="INTEGER"/>
+        <result property="sendtoid" column="sendToId" jdbcType="INTEGER"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="time" column="time" jdbcType="TIMESTAMP"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+    </resultMap>
+    <!--根据userId查询未读信息-->
+    <select id="selectUnreadListByUserId" resultMap="BaseResultMap">
+        select id,
+               sendId,
+               sendToId,
+               content,
+               type, time, state
+        from messageSchema
+        where sendId = #{userId} and state =0
+    </select>
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select id,
+               sendId,
+               sendToId,
+               content,
+               type, time, state
+        from messageSchema
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+        id, sendId, sendToId, content, type, time, state
+        from messageSchema
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="sendid != null">
+                and sendId = #{sendid}
+            </if>
+            <if test="sendtoid != null">
+                and sendToId = #{sendtoid}
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="time != null">
+                and time = #{time}
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+    select
+    id, sendId, sendToId, content, type, time, state
+    from api.messageSchema
+    </select>
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from messageSchema
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="sendid != null">
+                and sendId = #{sendid}
+            </if>
+            <if test="sendtoid != null">
+                and sendToId = #{sendtoid}
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="time != null">
+                and time = #{time}
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into messageSchema(sendId, sendToId, content, type, time, state)
+        values (#{sendid}, #{sendtoid}, #{content}, #{type}, #{time}, #{state})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into messageSchema(sendId, sendToId, content, type, time, state)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.sendid}, #{entity.sendtoid}, #{entity.content}, #{entity.type}, #{entity.time}, #{entity.state})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into messageSchema(sendId, sendToId, content, type, time, state)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.sendid}, #{entity.sendtoid}, #{entity.content}, #{entity.type}, #{entity.time}, #{entity.state})
+        </foreach>
+        on duplicate key update
+        sendId = values(sendId),
+        sendToId = values(sendToId),
+        content = values(content),
+        type = values(type),
+        time = values(time),
+        state = values(state)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update messageSchema
+        <set>
+            <if test="sendid != null">
+                sendId = #{sendid},
+            </if>
+            <if test="sendtoid != null">
+                sendToId = #{sendtoid},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from messageSchema
+        where id = #{id}
+    </delete>
+
+</mapper>
+
