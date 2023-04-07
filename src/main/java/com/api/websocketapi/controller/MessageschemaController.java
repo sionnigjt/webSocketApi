@@ -17,6 +17,7 @@ import java.util.List;
  * @author makejava
  * @since 2023-04-07 09:52:25
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/api/message")
 public class MessageschemaController {

@@ -3,6 +3,7 @@ package com.api.websocketapi.service.impl;
 
 import com.api.websocketapi.service.MinIOService;
 import com.api.websocketapi.utils.MinIOUtils;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import java.io.InputStream;
 
 @Service
 public class MinIOServiceImpl  implements MinIOService {
-    @Autowired
+    @Resource
     private MinIOUtils minIOUtils;
 
     /**

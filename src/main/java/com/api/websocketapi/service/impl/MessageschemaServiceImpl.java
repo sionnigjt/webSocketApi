@@ -34,6 +34,11 @@ public class MessageschemaServiceImpl implements MessageschemaService {
         return messageschemaDao.selectUnreadListByUserId(userId);
     }
 
+    @Override
+    public int changeSateToRead(Integer userId) {
+        return messageschemaDao.changeSateToRead(userId);
+    }
+
     /**
      * 通过ID查询单条数据
      *

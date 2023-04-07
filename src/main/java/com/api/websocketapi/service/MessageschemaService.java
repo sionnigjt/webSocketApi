@@ -4,6 +4,7 @@ import com.api.websocketapi.entity.Messageschema;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+
 import java.util.List;
 
 /**
@@ -20,7 +21,13 @@ public interface MessageschemaService {
      * @return 实例对象
      */
     List<Messageschema> selectUnreadListByUserId(Integer userId);
-
+    /**
+     * 修改数据
+     *
+     * @param userId
+     * @return 影响行数
+     */
+    int changeSateToRead(Integer userId);
     /**
      * 通过ID查询单条数据
      *

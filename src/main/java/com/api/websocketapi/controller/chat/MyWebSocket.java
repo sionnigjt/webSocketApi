@@ -1,11 +1,15 @@
 package com.api.websocketapi.controller.chat;
 
+import com.api.websocketapi.dao.MessageschemaDao;
+import com.api.websocketapi.entity.Messageschema;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnMessage;
 import jakarta.websocket.OnOpen;
 import jakarta.websocket.Session;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -21,7 +25,7 @@ public class MyWebSocket {
     /**
      * 所有的对象，每次连接建立，都会将我们自己定义的MyWebSocket存放到List中，
      */
-    public static List<MyWebSocket> webSockets = new CopyOnWriteArrayList<MyWebSocket>();
+    public static List<MyWebSocket> webSockets = new CopyOnWriteArrayList<>();
 
     /**
      * 会话，与某个客户端的连接会话，需要通过它来给客户端发送数据
@@ -34,13 +38,31 @@ public class MyWebSocket {
     private String userId;
     private String friendId;
     /**
+     * 服务对象
+     */
+
+    //此处是解决无法注入的关键
+
+    private static ApplicationContext applicationContext;
+    //你要注入的service或者dao
+
+    private MessageschemaDao messageschemaDao;
+    public static void setApplicationContext(ApplicationContext applicationContext) {
+        MyWebSocket.applicationContext = applicationContext;
+    }
+
+
+    @Autowired
+    public void initMessageschemaDao(MessageschemaDao messageschemaDao) {
+        this.messageschemaDao = messageschemaDao;
+    }
+
+    /**
      * 建立连接
-     *
-     * @param session
      */
     @OnOpen
-    public void onOpen(Session session, @PathParam("userId") String user,@PathParam("friendId") String friendId) {
-        if (user == null || "".equals(user)) {
+    public void onOpen(Session session, @PathParam("userId") String userId, @PathParam("friendId") String friendId) {
+        if (userId == null || "".equals(userId)) {
             try {
                 session.close();
             } catch (IOException e) {
@@ -49,7 +71,7 @@ public class MyWebSocket {
             return;
         }
         for (MyWebSocket myWebSocket : webSockets) {
-            if (user.equals(myWebSocket.userId)) {
+            if (userId.equals(myWebSocket.userId)) {
                 try {
                     session.close();
                 } catch (IOException e) {
@@ -60,10 +82,12 @@ public class MyWebSocket {
             }
         }
         this.session = session;
-        this.userId = user;
-        this.friendId=friendId;
+        this.userId = userId;
+        this.friendId = friendId;
         webSockets.add(this);
-        System.out.println("有新连接加入！");
+        messageschemaDao = applicationContext.getBean(MessageschemaDao.class);
+        System.out.println(userId + "加入！" + this.messageschemaDao);
+
     }
 
     /**
@@ -72,18 +96,19 @@ public class MyWebSocket {
     @OnClose
     public void onClose() {
         webSockets.remove(this);
-        System.out.println("有连接关闭！");
+        System.out.println(this.userId + "退出！");
     }
 
     /**
      * 收到客户端的消息
      *
      * @param message 消息
-     * @param session 会话
      */
     @OnMessage
-    public void onMessage(String message, Session session, @PathParam("userId") String user,@PathParam("friendId") String friendId) {
-        System.out.println("来自" + user + "消息：" + message+"将发送给"+friendId);
+    public void onMessage(String message) {
+        System.out.println("来自" + userId + "消息：" + message + "将发送给" + friendId);
+        Messageschema messageschema = new Messageschema(userId, friendId, message, 0);
+//        messageschemaService.insert(messageschema);
         pushMessage(message, friendId);
     }
 
@@ -103,8 +128,7 @@ public class MyWebSocket {
     /**
      * 消息推送
      *
-     * @param message
-     * @param friendId    uuid为空则推送全部人员
+     * @param friendId uuid为空则推送全部人员
      */
     public static void pushMessage(String message, String friendId) {
         if (friendId == null || "".equals(friendId)) {
@@ -112,7 +136,7 @@ public class MyWebSocket {
         } else {
             for (MyWebSocket myWebSocket : webSockets) {
                 if (friendId.equals(myWebSocket.userId)) {
-                    System.out.println("给用户"+myWebSocket.userId+"发送了"+message);
+                    System.out.println("给用户" + myWebSocket.userId + "发送了" + message);
                     myWebSocket.sendMessage(message);
                 }
             }

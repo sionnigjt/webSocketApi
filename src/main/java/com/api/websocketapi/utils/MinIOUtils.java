@@ -5,6 +5,7 @@ import io.minio.errors.InvalidExpiresRangeException;
 import io.minio.messages.Bucket;
 import io.minio.messages.DeleteError;
 import io.minio.messages.Item;
+import jakarta.annotation.Resource;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
@@ -22,7 +23,7 @@ import java.util.List;
 @Component
 public class MinIOUtils {
 
-    @Autowired
+    @Resource
     private MinioClient minIOClient;
 
     private static final int DEFAULT_EXPIRY_TIME = 7 * 24 * 3600;

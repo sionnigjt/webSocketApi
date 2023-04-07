@@ -14,6 +14,7 @@ public class Messageschema implements Serializable {
 
     private Integer id;
 
+
     private Integer sendid;
 
     private Integer sendtoid;
@@ -25,6 +26,18 @@ public class Messageschema implements Serializable {
     private Date time;
 
     private Integer state;
+
+    public Messageschema() {
+
+    }
+
+    public Messageschema(String userId, String friendId, String message, int type) {
+        this.sendid = Integer.valueOf(userId);
+        this.sendtoid = Integer.valueOf(friendId);
+        this.content = message;
+        this.type = type;
+        this.time=new Date();
+    }
 
 
     public Integer getId() {

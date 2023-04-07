@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * @author makejava
  * @since 2023-03-05 12:47:53
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/api/user")
 public class UserschemaController {

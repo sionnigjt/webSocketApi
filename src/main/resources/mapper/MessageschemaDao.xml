@@ -129,6 +129,16 @@
     </insert>
 
     <!--通过主键修改数据-->
+    <update id="changeSateToRead">
+        update messageSchema
+        <set>
+            <if test="state != null">
+                state = 1,
+            </if>
+        </set>
+        where id = #{userId}
+    </update>
+    <!--通过主键修改数据-->
     <update id="update">
         update messageSchema
         <set>
