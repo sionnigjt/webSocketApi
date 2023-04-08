@@ -2,10 +2,7 @@ package com.api.websocketapi.controller.chat;
 
 import com.api.websocketapi.dao.MessageschemaDao;
 import com.api.websocketapi.entity.Messageschema;
-import jakarta.websocket.OnClose;
-import jakarta.websocket.OnMessage;
-import jakarta.websocket.OnOpen;
-import jakarta.websocket.Session;
+import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +34,12 @@ public class MyWebSocket {
      */
     private String userId;
     private String friendId;
+    private Boolean isInit=false;
     /**
      * 服务对象
      */
 
-    //此处是解决无法注入的关键
+    //解决无法注入
 
     private static ApplicationContext applicationContext;
     //你要注入的service或者dao
@@ -84,9 +82,10 @@ public class MyWebSocket {
         this.session = session;
         this.userId = userId;
         this.friendId = friendId;
+        this.isInit=false;
         webSockets.add(this);
         messageschemaDao = applicationContext.getBean(MessageschemaDao.class);
-        System.out.println(userId + "加入！" + this.messageschemaDao);
+        System.out.println("用户"+userId + "加入！");
 
     }
 
@@ -95,8 +94,9 @@ public class MyWebSocket {
      */
     @OnClose
     public void onClose() {
-        webSockets.remove(this);
         System.out.println(this.userId + "退出！");
+        webSockets.remove(this);
+        isInit=false;
     }
 
     /**
@@ -106,10 +106,27 @@ public class MyWebSocket {
      */
     @OnMessage
     public void onMessage(String message) {
-        System.out.println("来自" + userId + "消息：" + message + "将发送给" + friendId);
-        Messageschema messageschema = new Messageschema(userId, friendId, message, 0);
+        //初始化数据
+        if ("init".equals(message) && !isInit){
+            isInit=true;
+            List<Messageschema> messageschemaList = this.messageschemaDao.selectUnreadListByUserId(Integer.valueOf(userId));
+            for (Messageschema messageschema : messageschemaList) {
+                try {
+                    session.getBasicRemote().sendText(messageschema.getContent());
+                    System.out.println(messageschema.getContent());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        else {
+            System.out.println("来自" + userId + "消息：" + message + "将发送给" + friendId);
+            Messageschema messages = new Messageschema(userId, friendId, message, 0);
 //        messageschemaService.insert(messageschema);
-        pushMessage(message, friendId);
+            pushMessage(message, friendId);
+        }
+
+
     }
 
     /**
