@@ -5,6 +5,7 @@ import com.api.websocketapi.entity.Messageschema;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -109,10 +110,14 @@ public class MyWebSocket {
         //初始化数据
         if ("init".equals(message) && !isInit){
             isInit=true;
-            List<Messageschema> messageschemaList = this.messageschemaDao.selectUnreadListByUserId(Integer.valueOf(userId));
+            List<Messageschema> messageschemaList = this.messageschemaDao.selectUnreadListByUserId(Integer.valueOf(friendId));
             for (Messageschema messageschema : messageschemaList) {
                 try {
-                    session.getBasicRemote().sendText(messageschema.getContent());
+
+                    JSONObject result = new JSONObject();
+                    result.put("message", messageschema.getContent());
+                    result.put("imgUrl", "http://sion.link:9000/img/2023-04-18/5e49297d-2a4a-4828-b40c-3b3effabb168.jpg");
+                    session.getBasicRemote().sendText(result.toString());
                     System.out.println(messageschema.getContent());
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -121,7 +126,7 @@ public class MyWebSocket {
         }
         else {
             System.out.println("来自" + userId + "消息：" + message + "将发送给" + friendId);
-            Messageschema messages = new Messageschema(userId, friendId, message, 0);
+//            Messageschema messages = new Messageschema(userId, friendId, message, 0);
 //        messageschemaService.insert(messageschema);
             pushMessage(message, friendId);
         }
@@ -136,7 +141,11 @@ public class MyWebSocket {
      */
     public void sendMessage(String message) {
         try {
-            session.getBasicRemote().sendText(message);
+
+            JSONObject result = new JSONObject();
+            result.put("message", message);
+            result.put("imgUrl", "http://sion.link:9000/img/2023-04-18/5e49297d-2a4a-4828-b40c-3b3effabb168.jpg");
+            this.session.getBasicRemote().sendText(result.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
