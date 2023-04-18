@@ -4,6 +4,7 @@ import com.api.websocketapi.entity.Userschema;
 import com.api.websocketapi.dao.UserschemaDao;
 import com.api.websocketapi.service.UserschemaService;
 import jakarta.annotation.Resource;
+import net.sf.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,6 +24,11 @@ import org.springframework.data.domain.PageRequest;
 public class UserschemaServiceImpl implements UserschemaService {
     @Resource
     private UserschemaDao userschemaDao;
+
+    @Override
+    public String getImgUrlById(Integer id) {
+        return userschemaDao.getUrlById(id);
+    }
 
     /**
      * 通过username查询单条数据
@@ -105,7 +111,10 @@ public class UserschemaServiceImpl implements UserschemaService {
            else{
                 String encodedPassword=userschema.getPassword();
                 if (new BCryptPasswordEncoder().matches(password,encodedPassword)){
-                    return ResponseEntity.ok(userschema.getId()+"") ;
+                    JSONObject result = new JSONObject();
+                    result.put("userId",userschema.getId());
+                    result.put("imgUrl",userschema.getImgUrl());
+                    return ResponseEntity.ok(result.toString()) ;
                 }
 
             }

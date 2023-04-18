@@ -1,7 +1,8 @@
 package com.api.websocketapi.controller.chat;
 
 import com.api.websocketapi.dao.MessageschemaDao;
-import com.api.websocketapi.entity.Messageschema;
+import com.api.websocketapi.dao.UserschemaDao;
+import com.api.websocketapi.entity.MessageContent;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
@@ -35,7 +36,10 @@ public class MyWebSocket {
      */
     private String userId;
     private String friendId;
+    private  String img_url;
     private Boolean isInit=false;
+
+    
     /**
      * 服务对象
      */
@@ -110,14 +114,15 @@ public class MyWebSocket {
         //初始化数据
         if ("init".equals(message) && !isInit){
             isInit=true;
-            List<Messageschema> messageschemaList = this.messageschemaDao.selectUnreadListByUserId(Integer.valueOf(friendId));
-            for (Messageschema messageschema : messageschemaList) {
+            List<MessageContent> messageschemaList = this.messageschemaDao.selectUnreadListByUserId(Integer.valueOf(friendId));
+            for (MessageContent messageschema : messageschemaList) {
                 try {
 
                     JSONObject result = new JSONObject();
                     result.put("message", messageschema.getContent());
-                    result.put("imgUrl", "http://sion.link:9000/img/2023-04-18/5e49297d-2a4a-4828-b40c-3b3effabb168.jpg");
+                    result.put("imgUrl", messageschema.getImg_url());
                     session.getBasicRemote().sendText(result.toString());
+                    this.img_url=messageschema.getImg_url();
                     System.out.println(messageschema.getContent());
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -144,7 +149,7 @@ public class MyWebSocket {
 
             JSONObject result = new JSONObject();
             result.put("message", message);
-            result.put("imgUrl", "http://sion.link:9000/img/2023-04-18/5e49297d-2a4a-4828-b40c-3b3effabb168.jpg");
+            result.put("imgUrl",this.img_url);
             this.session.getBasicRemote().sendText(result.toString());
         } catch (IOException e) {
             e.printStackTrace();

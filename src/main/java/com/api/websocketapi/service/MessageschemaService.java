@@ -1,5 +1,6 @@
 package com.api.websocketapi.service;
 
+import com.api.websocketapi.entity.MessageContent;
 import com.api.websocketapi.entity.Messageschema;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +21,7 @@ public interface MessageschemaService {
      * @param userId
      * @return 实例对象
      */
-    List<Messageschema> selectUnreadListByUserId(Integer userId);
+    List<MessageContent> selectUnreadListByUserId(Integer userId);
     /**
      * 修改数据
      *

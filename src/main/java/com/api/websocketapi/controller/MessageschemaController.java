@@ -1,5 +1,6 @@
 package com.api.websocketapi.controller;
 
+import com.api.websocketapi.entity.MessageContent;
 import com.api.websocketapi.entity.Messageschema;
 import com.api.websocketapi.service.MessageschemaService;
 import jakarta.annotation.Resource;
@@ -46,7 +47,7 @@ public class MessageschemaController {
      * @return 实例对象
      */
     @GetMapping("{id}")
-    public ResponseEntity<List<Messageschema>> selectUnreadListByUserId(@PathVariable("id") Integer id) {
+    public ResponseEntity<List<MessageContent>> selectUnreadListByUserId(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(this.messageschemaService.selectUnreadListByUserId(id));
     }
 

@@ -18,6 +18,13 @@ public interface UserschemaDao {
      * 通过username查询单条数据
      *
      * @param  id
+     * @return String url
+     */
+    String getUrlById(Integer id);
+    /**
+     * 通过username查询单条数据
+     *
+     * @param  id
      * @return String 姓名
      */
     String getNameById(Integer id);

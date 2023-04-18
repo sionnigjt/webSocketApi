@@ -1,5 +1,6 @@
 package com.api.websocketapi.dao;
 
+import com.api.websocketapi.entity.MessageContent;
 import com.api.websocketapi.entity.Messageschema;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -22,7 +23,7 @@ public interface MessageschemaDao {
      * @param userId
      * @return 实例对象
      */
-    List<Messageschema>  selectUnreadListByUserId(Integer userId);
+    List<MessageContent>  selectUnreadListByUserId(Integer userId);
     /**
      * 修改数据
      *

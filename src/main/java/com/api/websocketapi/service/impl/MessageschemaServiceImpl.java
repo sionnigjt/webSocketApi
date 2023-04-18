@@ -1,5 +1,6 @@
 package com.api.websocketapi.service.impl;
 
+import com.api.websocketapi.entity.MessageContent;
 import com.api.websocketapi.entity.Messageschema;
 import com.api.websocketapi.dao.MessageschemaDao;
 import com.api.websocketapi.service.MessageschemaService;
@@ -30,7 +31,7 @@ public class MessageschemaServiceImpl implements MessageschemaService {
      * @return 实例对象
      */
     @Override
-    public List<Messageschema> selectUnreadListByUserId(Integer userId) {
+    public List<MessageContent> selectUnreadListByUserId(Integer userId) {
         return messageschemaDao.selectUnreadListByUserId(userId);
     }
 

@@ -25,10 +25,21 @@ public class UserschemaController {
     @Resource
     private UserschemaService userschemaService;
 
+    /**
+     * 通过id查询单条数据
+     *
+     * @param  id
+     * @return String url
+     */
+    @GetMapping("/getImgUrlById/{id}")
+    public ResponseEntity<String> getImgUrlById(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(this.userschemaService.getImgUrlById(id));
+    }
+
 
 
     /**
-     * 通过username查询单条数据
+     * 通过id查询单条数据
      *
      * @param  id
      * @return String 姓名

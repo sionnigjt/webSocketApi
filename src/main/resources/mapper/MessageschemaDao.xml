@@ -12,15 +12,27 @@
         <result property="time" column="time" jdbcType="TIMESTAMP"/>
         <result property="state" column="state" jdbcType="INTEGER"/>
     </resultMap>
+    <resultMap id="MessageItem" type="com.api.websocketapi.entity.MessageContent">
+        <!--@Table messageSchema-->
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="sendid" column="sendId" jdbcType="INTEGER"/>
+        <result property="sendtoid" column="sendToId" jdbcType="INTEGER"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="time" column="time" jdbcType="TIMESTAMP"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+        <result property="img_url" column="img_url" jdbcType="VARCHAR"/>
+    </resultMap>
     <!--根据userId查询未读信息-->
-    <select id="selectUnreadListByUserId" resultMap="BaseResultMap">
-        select id,
+    <select id="selectUnreadListByUserId" resultMap="MessageItem">
+        select messageSchema.id,
                sendId,
                sendToId,
                content,
-               type, time, state
-        from messageSchema
-        where sendId = #{userId} and state =0
+               type, time, state,
+            uS.img_url
+        from messageSchema join userSchema uS on uS.id = messageSchema.sendId
+        where sendId =#{userId} and state =0
     </select>
     <!--查询单个-->
     <select id="queryById" resultMap="BaseResultMap">
