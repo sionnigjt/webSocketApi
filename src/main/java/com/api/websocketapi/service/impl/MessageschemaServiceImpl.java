@@ -24,16 +24,16 @@ public class MessageschemaServiceImpl implements MessageschemaService {
     @Resource
     private MessageschemaDao messageschemaDao;
 
-    /**
-     * 通过ID查询单条数据
-     *
-     * @param userId
-     * @return 实例对象
-     */
-    @Override
-    public List<MessageContent> selectUnreadListByUserId(Integer userId) {
-        return messageschemaDao.selectUnreadListByUserId(userId);
-    }
+//    /**
+//     * 通过ID查询单条数据
+//     *
+//     * @param userId
+//     * @return 实例对象
+//     */
+//    @Override
+//    public List<MessageContent> selectUnreadListByUserId(Integer userId) {
+//        return messageschemaDao.selectUnreadListByUserId(userId);
+//    }
 
     @Override
     public int changeSateToRead(Integer userId) {

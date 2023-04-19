@@ -40,16 +40,16 @@ public class MessageschemaController {
         return ResponseEntity.ok(this.messageschemaService.queryByPage(messageschema, pageRequest));
     }
 
-    /**
-     * 通过ID查询单条数据
-     *
-     * @param id
-     * @return 实例对象
-     */
-    @GetMapping("{id}")
-    public ResponseEntity<List<MessageContent>> selectUnreadListByUserId(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(this.messageschemaService.selectUnreadListByUserId(id));
-    }
+//    /**
+//     * 通过ID查询单条数据
+//     *
+//     * @param id
+//     * @return 实例对象
+//     */
+//    @GetMapping("{id}")
+//    public ResponseEntity<List<MessageContent>> selectUnreadListByUserId(@PathVariable("id") Integer id) {
+//        return ResponseEntity.ok(this.messageschemaService.selectUnreadListByUserId(id));
+//    }
 
     /**
      * 新增数据

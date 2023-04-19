@@ -31,12 +31,13 @@ public class Messageschema implements Serializable {
 
     }
 
-    public Messageschema(String userId, String friendId, String message, int type) {
+    public Messageschema(String userId, String friendId, String message, int type,int state) {
         this.sendid = Integer.valueOf(userId);
         this.sendtoid = Integer.valueOf(friendId);
         this.content = message;
         this.type = type;
         this.time=new Date();
+        this.state=state;
     }
 
 

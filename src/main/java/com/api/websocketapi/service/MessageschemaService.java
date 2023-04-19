@@ -15,13 +15,13 @@ import java.util.List;
  * @since 2023-04-07 09:52:26
  */
 public interface MessageschemaService {
-    /**
-     * 通过ID查询单条数据
-     *
-     * @param userId
-     * @return 实例对象
-     */
-    List<MessageContent> selectUnreadListByUserId(Integer userId);
+//    /**
+//     * 通过ID查询单条数据
+//     *
+//     * @param userId
+//     * @return 实例对象
+//     */
+//    List<MessageContent> selectUnreadListByUserId(Integer userId);
     /**
      * 修改数据
      *

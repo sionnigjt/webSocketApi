@@ -1,4 +1,4 @@
-package com.api.websocketapi.controller.register;
+package com.api.websocketapi.controller.registerAndLogin;
 
 import com.api.websocketapi.entity.Userschema;
 import com.api.websocketapi.service.UserschemaService;

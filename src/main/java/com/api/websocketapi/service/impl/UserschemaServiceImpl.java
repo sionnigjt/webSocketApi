@@ -114,6 +114,7 @@ public class UserschemaServiceImpl implements UserschemaService {
                     JSONObject result = new JSONObject();
                     result.put("userId",userschema.getId());
                     result.put("imgUrl",userschema.getImgUrl());
+                    result.put("name",userschema.getName());
                     return ResponseEntity.ok(result.toString()) ;
                 }
 
