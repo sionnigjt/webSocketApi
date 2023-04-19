@@ -3,6 +3,7 @@ package com.api.websocketapi.controller.chat;
 import com.api.websocketapi.dao.MessageschemaDao;
 import com.api.websocketapi.dao.UserschemaDao;
 import com.api.websocketapi.entity.MessageContent;
+import com.api.websocketapi.entity.Messageschema;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
@@ -36,7 +37,7 @@ public class MyWebSocket {
      */
     private String userId;
     private String friendId;
-    private  String img_url;
+    private  String imgUrl;
     private Boolean isInit=false;
 
     
@@ -50,6 +51,7 @@ public class MyWebSocket {
     //你要注入的service或者dao
 
     private MessageschemaDao messageschemaDao;
+    private static   UserschemaDao userschemaDao;
     public static void setApplicationContext(ApplicationContext applicationContext) {
         MyWebSocket.applicationContext = applicationContext;
     }
@@ -58,6 +60,12 @@ public class MyWebSocket {
     @Autowired
     public void initMessageschemaDao(MessageschemaDao messageschemaDao) {
         this.messageschemaDao = messageschemaDao;
+
+    }
+    @Autowired
+    public void initUserschemaDao(UserschemaDao userschemaDao) {
+        MyWebSocket.userschemaDao = userschemaDao;
+
     }
 
     /**
@@ -114,25 +122,32 @@ public class MyWebSocket {
         //初始化数据
         if ("init".equals(message) && !isInit){
             isInit=true;
-            List<MessageContent> messageschemaList = this.messageschemaDao.selectUnreadListByUserId(Integer.valueOf(friendId));
+            List<MessageContent> messageschemaList = this.messageschemaDao.selectUnreadListBySendIds(Integer.valueOf(friendId), Integer.valueOf(userId));
             for (MessageContent messageschema : messageschemaList) {
                 try {
 
                     JSONObject result = new JSONObject();
                     result.put("message", messageschema.getContent());
                     result.put("imgUrl", messageschema.getImg_url());
+                    Integer type=2;
+                    if (this.userId.equals(messageschema.getSendid()+"")){
+                        type=1;
+                    }
+                    result.put("type",type);
                     session.getBasicRemote().sendText(result.toString());
-                    this.img_url=messageschema.getImg_url();
-                    System.out.println(messageschema.getContent());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+            //防止消息表中无imgUrl
+            this.imgUrl = userschemaDao.getUrlById(Integer.valueOf(friendId));
+
         }
         else {
             System.out.println("来自" + userId + "消息：" + message + "将发送给" + friendId);
 //            Messageschema messages = new Messageschema(userId, friendId, message, 0);
 //        messageschemaService.insert(messageschema);
+            setMessage(userId,friendId, message);
             pushMessage(message, friendId);
         }
 
@@ -149,7 +164,8 @@ public class MyWebSocket {
 
             JSONObject result = new JSONObject();
             result.put("message", message);
-            result.put("imgUrl",this.img_url);
+            result.put("imgUrl",this.imgUrl);
+            System.out.println("给用户" + this.userId + "发送了" + message);
             this.session.getBasicRemote().sendText(result.toString());
         } catch (IOException e) {
             e.printStackTrace();
@@ -161,17 +177,26 @@ public class MyWebSocket {
      *
      * @param friendId uuid为空则推送全部人员
      */
-    public static void pushMessage(String message, String friendId) {
+    public static void pushMessage(String content, String friendId) {
         if (friendId == null || "".equals(friendId)) {
             System.out.println("用户不存在");
         } else {
             for (MyWebSocket myWebSocket : webSockets) {
                 if (friendId.equals(myWebSocket.userId)) {
-                    System.out.println("给用户" + myWebSocket.userId + "发送了" + message);
-                    myWebSocket.sendMessage(message);
+
+                    JSONObject json = JSONObject.fromObject(content);
+                    System.out.println(json+json.toString()+content);
+                    myWebSocket.sendMessage(json.getString("message"));
                 }
             }
         }
 
+    }
+    private void  setMessage(String sendId,String sendToId ,String content){
+        JSONObject json = JSONObject.fromObject(content);
+        String message=json.getString("message");
+        Integer type=json.getInt("type");
+        Messageschema messages = new Messageschema(sendId, sendToId, message,type,0);
+        messageschemaDao.insert(messages);
     }
 }

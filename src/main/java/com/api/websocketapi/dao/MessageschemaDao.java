@@ -21,9 +21,10 @@ public interface MessageschemaDao {
      * 通过ID查询单条数据
      *
      * @param userId
+     * @param friendId
      * @return 实例对象
      */
-    List<MessageContent>  selectUnreadListByUserId(Integer userId);
+    List<MessageContent>  selectUnreadListBySendIds(Integer userId,Integer friendId);
     /**
      * 修改数据
      *

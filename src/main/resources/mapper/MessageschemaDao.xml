@@ -24,7 +24,7 @@
         <result property="img_url" column="img_url" jdbcType="VARCHAR"/>
     </resultMap>
     <!--根据userId查询未读信息-->
-    <select id="selectUnreadListByUserId" resultMap="MessageItem">
+    <select id="selectUnreadListBySendIds" resultMap="MessageItem">
         select messageSchema.id,
                sendId,
                sendToId,
@@ -32,7 +32,7 @@
                type, time, state,
             uS.img_url
         from messageSchema join userSchema uS on uS.id = messageSchema.sendId
-        where sendId =#{userId} and state =0
+        where (sendId =#{userId} or sendToId =#{userId} )  and  (sendId =#{friendId} or sendToId =#{friendId} ) and state =0 order by time
     </select>
     <!--查询单个-->
     <select id="queryById" resultMap="BaseResultMap">
