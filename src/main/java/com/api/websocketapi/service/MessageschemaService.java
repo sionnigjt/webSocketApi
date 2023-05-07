@@ -1,9 +1,9 @@
 package com.api.websocketapi.service;
-
-import com.api.websocketapi.entity.MessageContent;
 import com.api.websocketapi.entity.Messageschema;
+import com.api.websocketapi.entity.chatListMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 
 
 import java.util.List;
@@ -22,6 +22,14 @@ public interface MessageschemaService {
 //     * @return 实例对象
 //     */
 //    List<MessageContent> selectUnreadListByUserId(Integer userId);
+    /**
+     * 获取最近的聊天消息
+     *
+     * @param id
+     * @return ResponseEntity
+     */
+
+    ResponseEntity<List<chatListMessage>> getChatList(Integer id);
     /**
      * 修改数据
      *

@@ -1,5 +1,7 @@
 package com.api.websocketapi.entity;
 
+import java.util.Date;
+
 /**
  * @author sion
  */
@@ -7,12 +9,18 @@ public class friendList {
 
     private Integer id;
 
-    private Integer userId;
+    private Integer sendId;
 
-    private Integer friendId;
+    private Integer sendToId;
     private String name;
 
     private String imgUrl;
+    private Date time;
+    private String content;
+    private Integer unread;
+    public friendList() {
+    }
+
 
     public Integer getId() {
         return id;
@@ -22,20 +30,20 @@ public class friendList {
         this.id = id;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getSendId() {
+        return sendId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setSendId(Integer sendId) {
+        this.sendId = sendId;
     }
 
-    public Integer getFriendId() {
-        return friendId;
+    public Integer getSendToId() {
+        return sendToId;
     }
 
-    public void setFriendId(Integer friendId) {
-        this.friendId = friendId;
+    public void setSendToId(Integer sendToId) {
+        this.sendToId = sendToId;
     }
 
     public String getName() {
@@ -52,5 +60,29 @@ public class friendList {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Integer getUnread() {
+        return unread;
+    }
+
+    public void setUnread(Integer unread) {
+        this.unread = unread;
     }
 }

@@ -2,6 +2,7 @@ package com.api.websocketapi.controller;
 
 import com.api.websocketapi.entity.MessageContent;
 import com.api.websocketapi.entity.Messageschema;
+import com.api.websocketapi.entity.chatListMessage;
 import com.api.websocketapi.service.MessageschemaService;
 import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
@@ -40,16 +41,16 @@ public class MessageschemaController {
         return ResponseEntity.ok(this.messageschemaService.queryByPage(messageschema, pageRequest));
     }
 
-//    /**
-//     * 通过ID查询单条数据
-//     *
-//     * @param id
-//     * @return 实例对象
-//     */
-//    @GetMapping("{id}")
-//    public ResponseEntity<List<MessageContent>> selectUnreadListByUserId(@PathVariable("id") Integer id) {
-//        return ResponseEntity.ok(this.messageschemaService.selectUnreadListByUserId(id));
-//    }
+    /**
+     * 通过ID查询单条数据
+     *
+     * @param id
+     * @return 实例对象
+     */
+    @GetMapping("getChatList/{id}")
+    public ResponseEntity<List<chatListMessage>> getChatList(@PathVariable("id") Integer id) {
+        return this.messageschemaService.getChatList(id);
+    }
 
     /**
      * 新增数据

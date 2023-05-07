@@ -32,7 +32,7 @@
                uS.name,
                uS.img_url
         from friendSchema join userSchema uS on uS.id = friendSchema.userId
-        where friendId = #{id}
+        where friendId = #{id} and state =2
     </select>
     <!--查询单个-->
     <select id="queryById" resultMap="BaseResultMap">

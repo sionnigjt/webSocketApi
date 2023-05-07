@@ -23,6 +23,30 @@
         <result property="state" column="state" jdbcType="INTEGER"/>
         <result property="img_url" column="img_url" jdbcType="VARCHAR"/>
     </resultMap>
+    <resultMap id="ChatList" type="com.api.websocketapi.entity.friendList">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="sendId" column="sendId" jdbcType="INTEGER"/>
+        <result property="sendToId" column="sendToId" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="imgUrl" column="img_url" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+    </resultMap>
+    <!--查询最近一个月内的好友信息-->
+    <select id="getChatList" resultMap="ChatList">
+        SELECT m.sendId, u.name, m.content,m.time,m.id,m.sendToId,u.img_url
+        FROM (
+                 SELECT sendId, MAX(time) AS time
+                 FROM messageSchema
+                 WHERE time >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
+                   AND state = 0
+                 GROUP BY sendId
+             ) AS latest
+                 JOIN messageSchema AS m ON latest.sendId = m.sendId AND latest.time = m.time
+                 JOIN userSchema AS u ON m.sendId = u.id
+        where sendToId=#{id}
+        GROUP BY m.sendId, u.name, m.content,m.time,m.id,m.sendToId,u.img_url
+        ORDER BY latest.time DESC;
+    </select>
     <!--根据userId查询未读信息-->
     <select id="selectUnreadListBySendIds" resultMap="MessageItem">
         select messageSchema.id,

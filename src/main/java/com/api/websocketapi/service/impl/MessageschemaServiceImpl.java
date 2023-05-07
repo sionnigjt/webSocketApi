@@ -1,10 +1,13 @@
 package com.api.websocketapi.service.impl;
 
+import com.api.websocketapi.entity.Friendschema;
 import com.api.websocketapi.entity.MessageContent;
 import com.api.websocketapi.entity.Messageschema;
 import com.api.websocketapi.dao.MessageschemaDao;
+import com.api.websocketapi.entity.chatListMessage;
 import com.api.websocketapi.service.MessageschemaService;
 import jakarta.annotation.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,6 +37,13 @@ public class MessageschemaServiceImpl implements MessageschemaService {
 //    public List<MessageContent> selectUnreadListByUserId(Integer userId) {
 //        return messageschemaDao.selectUnreadListByUserId(userId);
 //    }
+
+    @Override
+    public ResponseEntity<List<chatListMessage>> getChatList(Integer id) {
+        List<chatListMessage> friendschemaList= messageschemaDao.getChatList(id);
+
+        return ResponseEntity.ok(friendschemaList);
+    }
 
     @Override
     public int changeSateToRead(Integer userId) {

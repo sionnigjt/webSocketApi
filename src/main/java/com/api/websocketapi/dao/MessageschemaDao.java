@@ -2,9 +2,11 @@ package com.api.websocketapi.dao;
 
 import com.api.websocketapi.entity.MessageContent;
 import com.api.websocketapi.entity.Messageschema;
+import com.api.websocketapi.entity.chatListMessage;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -17,6 +19,14 @@ import java.util.List;
 @Mapper
 public interface MessageschemaDao {
 
+    /**
+     * 获取最近的聊天消息
+     *
+     * @param id
+     * @return ResponseEntity
+     */
+
+    List<chatListMessage> getChatList(Integer id);
     /**
      * 通过ID查询单条数据
      *
