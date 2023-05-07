@@ -40,9 +40,11 @@ public class MessageschemaServiceImpl implements MessageschemaService {
 
     @Override
     public ResponseEntity<List<chatListMessage>> getChatList(Integer id) {
-        List<chatListMessage> friendschemaList= messageschemaDao.getChatList(id);
-
-        return ResponseEntity.ok(friendschemaList);
+        List<chatListMessage> chatListMessageList= messageschemaDao.getChatList(id);
+        for(chatListMessage item:chatListMessageList){
+            item.setUnread(messageschemaDao.getUnreadById(item.getSendId()));
+        }
+        return ResponseEntity.ok(chatListMessageList);
     }
 
     @Override

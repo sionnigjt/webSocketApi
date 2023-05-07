@@ -23,13 +23,16 @@
         <result property="state" column="state" jdbcType="INTEGER"/>
         <result property="img_url" column="img_url" jdbcType="VARCHAR"/>
     </resultMap>
-    <resultMap id="ChatList" type="com.api.websocketapi.entity.friendList">
+    <resultMap id="ChatList" type="com.api.websocketapi.entity.chatListMessage">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="sendId" column="sendId" jdbcType="INTEGER"/>
         <result property="sendToId" column="sendToId" jdbcType="INTEGER"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="imgUrl" column="img_url" jdbcType="VARCHAR"/>
         <result property="content" column="content" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="unread" type="java.lang.Integer">
+        <result property="unread" column="unread" jdbcType="INTEGER"/>
     </resultMap>
     <!--查询最近一个月内的好友信息-->
     <select id="getChatList" resultMap="ChatList">
@@ -38,7 +41,6 @@
                  SELECT sendId, MAX(time) AS time
                  FROM messageSchema
                  WHERE time >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
-                   AND state = 0
                  GROUP BY sendId
              ) AS latest
                  JOIN messageSchema AS m ON latest.sendId = m.sendId AND latest.time = m.time
@@ -47,8 +49,15 @@
         GROUP BY m.sendId, u.name, m.content,m.time,m.id,m.sendToId,u.img_url
         ORDER BY latest.time DESC;
     </select>
-    <!--根据userId查询未读信息-->
-    <select id="selectUnreadListBySendIds" resultMap="MessageItem">
+
+    <select id="getUnreadById" resultMap="unread">
+        SELECT COUNT(*) AS unread
+        FROM messageSchema
+        WHERE sendId = #{id}
+          AND state = 0;
+    </select>
+    <!--根据userId查询信息-->
+    <select id="selectListBySendIds" resultMap="MessageItem">
         select messageSchema.id,
                sendId,
                sendToId,
@@ -56,7 +65,7 @@
                type, time, state,
             uS.img_url
         from messageSchema join userSchema uS on uS.id = messageSchema.sendId
-        where (sendId =#{userId} or sendToId =#{userId} )  and  (sendId =#{friendId} or sendToId =#{friendId} ) and state =0 order by time
+        where (sendId =#{userId} or sendToId =#{userId} )  and  (sendId =#{friendId} or sendToId =#{friendId} )order by time
     </select>
     <!--查询单个-->
     <select id="queryById" resultMap="BaseResultMap">

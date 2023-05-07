@@ -20,7 +20,7 @@ import java.util.List;
 public interface MessageschemaDao {
 
     /**
-     * 获取最近的聊天消息
+     * 获取最近一个月的聊天的好友消息
      *
      * @param id
      * @return ResponseEntity
@@ -28,13 +28,20 @@ public interface MessageschemaDao {
 
     List<chatListMessage> getChatList(Integer id);
     /**
+     * 获取未读消息
+     *
+     * @param id
+     * @return int
+     */
+    Integer getUnreadById(Integer id);
+    /**
      * 通过ID查询单条数据
      *
      * @param userId
      * @param friendId
      * @return 实例对象
      */
-    List<MessageContent>  selectUnreadListBySendIds(Integer userId,Integer friendId);
+    List<MessageContent>  selectListBySendIds(Integer userId,Integer friendId);
     /**
      * 修改数据
      *
