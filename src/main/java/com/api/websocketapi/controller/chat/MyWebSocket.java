@@ -140,6 +140,7 @@ public class MyWebSocket {
                         type = 1;
                     }
                     result.put("type", type);
+                    result.put("viewStyle",messageschema.getType());
                     session.getBasicRemote().sendText(result.toString());
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -159,6 +160,7 @@ public class MyWebSocket {
                 this.isSend=false;
             }
             else {
+
                 setMessage(userId, friendId, message, 0);
             }
 
@@ -178,6 +180,13 @@ public class MyWebSocket {
             JSONObject result = new JSONObject();
             result.put("message", message);
             result.put("imgUrl", this.imgUrl);
+            if (isImageURL(message)){
+                result.put("viewStyle",1);
+            }
+            else {
+                result.put("viewStyle",0);
+            }
+
             System.out.println("给用户" + this.userId + "发送了" + message);
             this.session.getBasicRemote().sendText(result.toString());
         } catch (IOException e) {
@@ -215,5 +224,25 @@ public class MyWebSocket {
         Integer type = json.getInt("type");
         Messageschema messages = new Messageschema(sendId, sendToId, message, type, sate);
         messageschemaDao.insert(messages);
+    }
+    public boolean isImageURL(String url) {
+        if (url == null || url.isEmpty()) {
+            return false;
+        }
+
+        // 检查 URL 是否以 http://sion.link:9000/ 开头
+        if (!url.startsWith("http://sion.link:9000/")) {
+            return false;
+        }
+
+        // 获取 URL 的文件扩展名
+        String ext = url.substring(url.lastIndexOf(".") + 1);
+
+        // 检查扩展名是否为图片格式
+        if (ext.equals("jpg") || ext.equals("png") || ext.equals("gif")) {
+            return true;
+        }
+
+        return false;
     }
 }

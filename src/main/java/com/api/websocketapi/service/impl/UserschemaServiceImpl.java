@@ -115,6 +115,7 @@ public class UserschemaServiceImpl implements UserschemaService {
                     result.put("userId",userschema.getId());
                     result.put("imgUrl",userschema.getImgUrl());
                     result.put("name",userschema.getName());
+                    result.put("signature",userschema.getSignature());
                     return ResponseEntity.ok(result.toString()) ;
                 }
 
