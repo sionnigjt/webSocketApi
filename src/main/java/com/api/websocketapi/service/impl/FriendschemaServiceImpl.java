@@ -2,6 +2,7 @@ package com.api.websocketapi.service.impl;
 
 import com.api.websocketapi.dao.FriendschemaDao;
 import com.api.websocketapi.entity.Friendschema;
+import com.api.websocketapi.entity.friendList;
 import com.api.websocketapi.service.FriendschemaService;
 import jakarta.annotation.Resource;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +22,15 @@ public class FriendschemaServiceImpl implements FriendschemaService {
     private FriendschemaDao friendschemaDao;
 
     @Override
-    public ResponseEntity<List<Friendschema>> getFriendList(Integer id) {
+    public ResponseEntity<List<friendList>> getFriendList(Integer id) {
         return ResponseEntity.ok(friendschemaDao.getFriendList(id));
+    }
+
+    @Override
+    public ResponseEntity<List<friendList>> getUnFriendList(Integer id) {
+        List<friendList> FriendschemaList=friendschemaDao.getUnFriendList(id);
+//        FriendschemaList.removeIf(friend -> !friend.getFriendId().equals(id));
+        return ResponseEntity.ok(FriendschemaList);
     }
 
     /**
@@ -35,6 +43,23 @@ public class FriendschemaServiceImpl implements FriendschemaService {
     public Friendschema queryById(Integer id) {
         return this.friendschemaDao.queryById(id);
     }
+
+    @Override
+    public Boolean addFriend(Friendschema friendschema) {
+        List<friendList> FriendschemaList=friendschemaDao.getFriendList(friendschema.getUserid());
+        Boolean isExit=false;
+        for (friendList item:FriendschemaList){
+            if (item.getUserId().equals(friendschema.getUserid()) && item.getFriendId().equals(friendschema.getFriendid())){
+                isExit=true;
+            }
+        }
+        if (!isExit){
+            friendschemaDao.insert(friendschema);
+            return  true;
+        }
+        return false;
+    }
+
     /**
      * 新增数据
      *

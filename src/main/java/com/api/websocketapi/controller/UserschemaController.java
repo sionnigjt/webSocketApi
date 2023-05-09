@@ -36,7 +36,16 @@ public class UserschemaController {
         return ResponseEntity.ok(this.userschemaService.getImgUrlById(id));
     }
 
-
+    /**
+     * 通过id查询用户
+     *
+     * @param  id
+     * @return Userschema
+     */
+    @GetMapping("/searchUserById/{id}")
+    public ResponseEntity<Userschema> searchUserById(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(this.userschemaService.queryById(id));
+    }
 
     /**
      * 通过id查询单条数据

@@ -1,6 +1,7 @@
 package com.api.websocketapi.service;
 
 import com.api.websocketapi.entity.Friendschema;
+import com.api.websocketapi.entity.friendList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,14 @@ public interface FriendschemaService {
      * @param id 主键
      * @return 实例对象
      */
-    ResponseEntity<List<Friendschema>> getFriendList(Integer id);
+    ResponseEntity<List<friendList>> getFriendList(Integer id);
+    /**
+     * 通过ID查询单用户表
+     *
+     * @param id 主键
+     * @return 实例对象
+     */
+    ResponseEntity<List<friendList>> getUnFriendList(Integer id);
     /**
      * 通过ID查询单条数据
      *
@@ -29,6 +37,13 @@ public interface FriendschemaService {
      */
     Friendschema queryById(Integer id);
 
+    /**
+     * 新增数据
+     *
+     * @param friendschema 实例对象
+     * @return 实例对象
+     */
+    Boolean addFriend(Friendschema friendschema);
 
     /**
      * 新增数据

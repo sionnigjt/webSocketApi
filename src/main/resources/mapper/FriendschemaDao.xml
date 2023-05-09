@@ -25,7 +25,7 @@
                uS.name,
                uS.img_url
         from friendSchema join userSchema uS on uS.id = friendSchema.friendId
-        where userId =#{id} union
+        where userId =#{id}  and  state =2  union
         select friendSchema.id,
                friendSchema.friendId,
                friendSchema.userId,
@@ -33,6 +33,17 @@
                uS.img_url
         from friendSchema join userSchema uS on uS.id = friendSchema.userId
         where friendId = #{id} and state =2
+    </select>
+    <!--查询请求好友信息-->
+    <select id="getUnFriendList" resultMap="friendList">
+
+        select friendSchema.id,
+               friendSchema.friendId,
+               friendSchema.userId,
+               uS.name,
+               uS.img_url
+        from friendSchema join userSchema uS on uS.id = friendSchema.userId
+        where friendId = #{id} and state =1
     </select>
     <!--查询单个-->
     <select id="queryById" resultMap="BaseResultMap">

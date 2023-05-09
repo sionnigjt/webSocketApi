@@ -1,6 +1,7 @@
 package com.api.websocketapi.dao;
 
 import com.api.websocketapi.entity.Friendschema;
+import com.api.websocketapi.entity.friendList;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +22,14 @@ public interface FriendschemaDao {
      * @param id 主键
      * @return 实例对象
      */
-    List<Friendschema>  getFriendList(Integer id);
+    List<friendList>  getFriendList(Integer id);
+    /**
+     * 通过ID查询好友表
+     *
+     * @param id 主键
+     * @return 实例对象
+     */
+    List<friendList>  getUnFriendList(Integer id);
     /**
      * 通过ID查询单条数据
      *

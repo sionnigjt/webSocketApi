@@ -1,10 +1,9 @@
 package com.api.websocketapi.controller;
 
 import com.api.websocketapi.entity.Friendschema;
+import com.api.websocketapi.entity.friendList;
 import com.api.websocketapi.service.FriendschemaService;
 import jakarta.annotation.Resource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,10 +32,19 @@ public class FriendschemaController {
      * @return 单条数据
      */
     @GetMapping("/getFriendList/{id}")
-    public ResponseEntity<List<Friendschema>> getFriendList(@PathVariable("id") Integer id) {
+    public ResponseEntity<List<friendList>> getFriendList(@PathVariable("id") Integer id) {
         return this.friendschemaService.getFriendList(id);
     }
-
+    /**
+     * 通过主键查询用户表
+     *
+     * @param id 主键
+     * @return 单条数据
+     */
+    @GetMapping("/getUnFriendList/{id}")
+    public ResponseEntity<List<friendList>> getUnFriendList(@PathVariable("id") Integer id) {
+        return this.friendschemaService.getUnFriendList(id);
+    }
     /**
      * 通过主键查询单条数据
      *
@@ -54,11 +62,15 @@ public class FriendschemaController {
      * @param friendschema 实体
      * @return 新增结果
      */
-    @PostMapping
-    public ResponseEntity<Friendschema> add(Friendschema friendschema) {
-        return ResponseEntity.ok(this.friendschemaService.insert(friendschema));
-    }
 
+    @PostMapping("/addFriend")
+    public ResponseEntity<Boolean> add(@RequestBody Friendschema friendschema) {
+        return ResponseEntity.ok(this.friendschemaService.addFriend(friendschema));
+    }
+    @PostMapping("/agreeFriend")
+    public ResponseEntity<Friendschema> agreeFriend(@RequestBody Friendschema friendschema) {
+        return ResponseEntity.ok(this.friendschemaService.update(friendschema));
+    }
     /**
      * 编辑数据
      *
