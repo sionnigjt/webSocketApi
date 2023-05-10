@@ -26,7 +26,8 @@ public class UserLoginAndRegister {
      *注册功能
      */
     @RequestMapping("/register")
-    public ResponseEntity<Userschema> register(Userschema userschema) {
+    public ResponseEntity<Userschema> register(@RequestBody Userschema userschema) {
+        System.out.println(userschema.getName()+userschema.getPassword());
         return ResponseEntity.ok(this.userschemaService.insert(userschema));
     }
 

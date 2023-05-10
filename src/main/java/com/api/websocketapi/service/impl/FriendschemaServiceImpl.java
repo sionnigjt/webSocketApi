@@ -29,7 +29,6 @@ public class FriendschemaServiceImpl implements FriendschemaService {
     @Override
     public ResponseEntity<List<friendList>> getUnFriendList(Integer id) {
         List<friendList> FriendschemaList=friendschemaDao.getUnFriendList(id);
-//        FriendschemaList.removeIf(friend -> !friend.getFriendId().equals(id));
         return ResponseEntity.ok(FriendschemaList);
     }
 
