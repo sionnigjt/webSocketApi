@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.api.websocketapi.dao.FriendschemaDao">
+
+    <resultMap id="BaseResultMap" type="com.api.websocketapi.entity.Friendschema">
+        <!--@Table friendSchema-->
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userid" column="userId" jdbcType="INTEGER"/>
+        <result property="friendid" column="friendId" jdbcType="INTEGER"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+        <result property="time" column="time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <resultMap id="friendList" type="com.api.websocketapi.entity.friendList">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="userId" jdbcType="INTEGER"/>
+        <result property="friendId" column="friendId" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="imgUrl" column="img_url" jdbcType="VARCHAR"/>
+    </resultMap>
+    <!--查询好友信息-->
+    <select id="getFriendList" resultMap="friendList">
+        select friendSchema.id,
+               friendSchema.userId,
+               friendSchema.friendId,
+               uS.name,
+               uS.img_url
+        from friendSchema join userSchema uS on uS.id = friendSchema.friendId
+        where userId =#{id}  and  state =2  union
+        select friendSchema.id,
+               friendSchema.friendId,
+               friendSchema.userId,
+               uS.name,
+               uS.img_url
+        from friendSchema join userSchema uS on uS.id = friendSchema.userId
+        where friendId = #{id} and state =2
+    </select>
+    <!--查询请求好友信息-->
+    <select id="getUnFriendList" resultMap="friendList">
+
+        select friendSchema.id,
+               friendSchema.friendId,
+               friendSchema.userId,
+               uS.name,
+               uS.img_url
+        from friendSchema join userSchema uS on uS.id = friendSchema.userId
+        where friendId = #{id} and state =1
+    </select>
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select id,
+               userId,
+               friendId,
+               state, time
+        from friendSchema
+        where id = #{id}
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into friendSchema(userId, friendId, state, time)
+        values (#{userid}, #{friendid}, #{state}, #{time})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into friendSchema(userId, friendId, state, time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userid}, #{entity.friendid}, #{entity.state}, #{entity.time})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into friendSchema(userId, friendId, state, time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userid}, #{entity.friendid}, #{entity.state}, #{entity.time})
+        </foreach>
+        on duplicate key update
+        userId = values(userId),
+        friendId = values(friendId),
+        state = values(state),
+        time = values(time)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update friendSchema
+        <set>
+            <if test="userid != null">
+                userId = #{userid},
+            </if>
+            <if test="friendid != null">
+                friendId = #{friendid},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from friendSchema
+        where id = #{id}
+    </delete>
+
+</mapper>
+

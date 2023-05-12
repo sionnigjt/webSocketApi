@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.api.websocketapi.dao.MessageschemaDao">
+
+    <resultMap id="BaseResultMap" type="com.api.websocketapi.entity.Messageschema">
+        <!--@Table messageSchema-->
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="sendid" column="sendId" jdbcType="INTEGER"/>
+        <result property="sendtoid" column="sendToId" jdbcType="INTEGER"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="time" column="time" jdbcType="TIMESTAMP"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="MessageItem" type="com.api.websocketapi.entity.MessageContent">
+        <!--@Table messageSchema-->
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="sendid" column="sendId" jdbcType="INTEGER"/>
+        <result property="sendtoid" column="sendToId" jdbcType="INTEGER"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="time" column="time" jdbcType="TIMESTAMP"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+        <result property="img_url" column="img_url" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="ChatList" type="com.api.websocketapi.entity.chatListMessage">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="sendId" column="sendId" jdbcType="INTEGER"/>
+        <result property="sendToId" column="sendToId" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="imgUrl" column="img_url" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="unread" type="java.lang.Integer">
+        <result property="unread" column="unread" jdbcType="INTEGER"/>
+    </resultMap>
+    <!--查询最近一个月内的好友信息-->
+    <select id="getChatList" resultMap="ChatList">
+        SELECT m.sendId, u.name, m.content,m.time,m.id,m.sendToId,u.img_url
+        FROM (
+                 SELECT sendId, MAX(time) AS time
+                 FROM messageSchema
+                 WHERE time >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
+                 GROUP BY sendId
+             ) AS latest
+                 JOIN messageSchema AS m ON latest.sendId = m.sendId AND latest.time = m.time
+                 JOIN userSchema AS u ON m.sendId = u.id
+        where sendToId=#{id}
+        GROUP BY m.sendId, u.name, m.content,m.time,m.id,m.sendToId,u.img_url
+        ORDER BY latest.time DESC;
+    </select>
+
+    <select id="getUnreadById" resultMap="unread">
+        SELECT COUNT(*) AS unread
+        FROM messageSchema
+        WHERE sendId = #{id}
+          AND state = 0;
+    </select>
+    <!--根据userId查询信息-->
+    <select id="selectListBySendIds" resultMap="MessageItem">
+        select messageSchema.id,
+               sendId,
+               sendToId,
+               content,
+               type, time, state,
+            uS.img_url
+        from messageSchema join userSchema uS on uS.id = messageSchema.sendId
+        where (sendId =#{userId} or sendToId =#{userId} )  and  (sendId =#{friendId} or sendToId =#{friendId} )order by time
+    </select>
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select id,
+               sendId,
+               sendToId,
+               content,
+               type, time, state
+        from messageSchema
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+        id, sendId, sendToId, content, type, time, state
+        from messageSchema
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="sendid != null">
+                and sendId = #{sendid}
+            </if>
+            <if test="sendtoid != null">
+                and sendToId = #{sendtoid}
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="time != null">
+                and time = #{time}
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+    select
+    id, sendId, sendToId, content, type, time, state
+    from api.messageSchema
+    </select>
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from messageSchema
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="sendid != null">
+                and sendId = #{sendid}
+            </if>
+            <if test="sendtoid != null">
+                and sendToId = #{sendtoid}
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="time != null">
+                and time = #{time}
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into messageSchema(sendId, sendToId, content, type, time, state)
+        values (#{sendid}, #{sendtoid}, #{content}, #{type}, #{time}, #{state})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into messageSchema(sendId, sendToId, content, type, time, state)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.sendid}, #{entity.sendtoid}, #{entity.content}, #{entity.type}, #{entity.time}, #{entity.state})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into messageSchema(sendId, sendToId, content, type, time, state)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.sendid}, #{entity.sendtoid}, #{entity.content}, #{entity.type}, #{entity.time}, #{entity.state})
+        </foreach>
+        on duplicate key update
+        sendId = values(sendId),
+        sendToId = values(sendToId),
+        content = values(content),
+        type = values(type),
+        time = values(time),
+        state = values(state)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="changeSateToRead">
+        update messageSchema
+        <set>
+            <if test="state != null">
+                state = 1,
+            </if>
+        </set>
+        where id = #{userId}
+    </update>
+    <!--通过主键修改数据-->
+    <update id="update">
+        update messageSchema
+        <set>
+            <if test="sendid != null">
+                sendId = #{sendid},
+            </if>
+            <if test="sendtoid != null">
+                sendToId = #{sendtoid},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from messageSchema
+        where id = #{id}
+    </delete>
+
+</mapper>
+
