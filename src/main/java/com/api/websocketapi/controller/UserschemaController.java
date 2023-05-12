@@ -39,12 +39,13 @@ public class UserschemaController {
     /**
      * 通过id查询用户
      *
-     * @param  id
+     * @param  name
      * @return Userschema
      */
-    @GetMapping("/searchUserById/{id}")
-    public ResponseEntity<Userschema> searchUserById(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(this.userschemaService.queryById(id));
+    @GetMapping("/searchUserById")
+    public ResponseEntity<Userschema> searchUserById(  @RequestParam(value = "name") String name) {
+        System.out.println(name);
+        return ResponseEntity.ok(this.userschemaService.getIdByName(name));
     }
 
     /**

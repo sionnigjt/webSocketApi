@@ -41,6 +41,11 @@ public class UserschemaServiceImpl implements UserschemaService {
         return userschemaDao.getNameById(id);
     }
 
+    @Override
+    public Userschema getIdByName(String name) {
+        return userschemaDao.selectByUsername(name);
+    }
+
     /**
      * 通过ID查询单条数据
      *

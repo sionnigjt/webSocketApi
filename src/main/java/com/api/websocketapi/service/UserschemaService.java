@@ -29,6 +29,13 @@ public interface UserschemaService  {
      */
     String getNameById(Integer id);
     /**
+     * 通过username查询单条数据
+     *
+     * @param  name
+     * @return String 姓名
+     */
+    Userschema getIdByName(String name);
+    /**
      * 通过ID查询单条数据
      *
      * @param id 主键

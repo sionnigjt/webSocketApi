@@ -29,11 +29,19 @@ public interface UserschemaDao {
      */
     String getNameById(Integer id);
     /**
+     * 通过username查询单条数据
+     *
+     * @param  name
+     * @return Integer
+     */
+    Userschema getIdByName(String name);
+    /**
     * 通过username查询单条数据
     *
     * @param username 姓名
      * @return User实例对象
     */
+
     Userschema selectByUsername(String username);
     /**
      * 通过ID查询单条数据
